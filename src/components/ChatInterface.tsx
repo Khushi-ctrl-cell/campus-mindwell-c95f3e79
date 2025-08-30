@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Send, Bot, User, Shield, Clock } from "lucide-react";
+import DOMPurify from "dompurify";
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([
@@ -24,12 +25,14 @@ const ChatInterface = () => {
   ];
 
   const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
+    const raw = inputValue;
+    const sanitized = DOMPurify.sanitize(raw, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }).trim();
+    if (!sanitized) return;
 
     const newMessage = {
       id: messages.length + 1,
       type: "user",
-      content: inputValue,
+      content: sanitized,
       timestamp: new Date()
     };
 
