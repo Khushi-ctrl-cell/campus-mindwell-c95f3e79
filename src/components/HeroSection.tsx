@@ -1,9 +1,15 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { MessageCircle, Shield, Clock, Users } from "lucide-react";
 import heroImage from "@/assets/hero-mental-health.jpg";
+import MentalHealthSupportChat from "./MentalHealthSupportChat";
+import ResourceHub from "./ResourceHub";
 
 const HeroSection = () => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isResourcesOpen, setIsResourcesOpen] = useState(false);
+
   return (
     <section className="relative bg-gradient-soft min-h-[80vh] flex items-center overflow-hidden">
       {/* Background Image */}
@@ -31,11 +37,19 @@ const HeroSection = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="bg-gradient-hero border-0 shadow-glow hover:shadow-glow/80">
+              <Button 
+                size="lg" 
+                className="bg-gradient-hero border-0 shadow-glow hover:shadow-glow/80"
+                onClick={() => setIsChatOpen(true)}
+              >
                 <MessageCircle className="h-5 w-5 mr-2" />
                 Start Chat Support
               </Button>
-              <Button variant="outline" size="lg">
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => setIsResourcesOpen(true)}
+              >
                 Browse Resources
               </Button>
             </div>
@@ -103,6 +117,16 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal Components */}
+      <MentalHealthSupportChat 
+        isOpen={isChatOpen} 
+        onClose={() => setIsChatOpen(false)} 
+      />
+      <ResourceHub 
+        isOpen={isResourcesOpen} 
+        onClose={() => setIsResourcesOpen(false)} 
+      />
     </section>
   );
 };

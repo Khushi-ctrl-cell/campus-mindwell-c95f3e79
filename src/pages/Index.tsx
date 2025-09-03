@@ -2,6 +2,7 @@ import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import ChatInterface from "@/components/ChatInterface";
+import PrivacyNotice from "@/components/PrivacyNotice";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -11,6 +12,7 @@ const Index = () => {
       <main>
         <HeroSection />
         <FeaturesSection />
+        <PrivacyNotice />
         <ChatInterface />
       </main>
       <Footer />

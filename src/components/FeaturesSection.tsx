@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -13,8 +14,39 @@ import {
 import chatIcon from "@/assets/chat-support-icon.jpg";
 import resourcesIcon from "@/assets/resources-icon.jpg";
 import bookingIcon from "@/assets/booking-icon.jpg";
+import MentalHealthSupportChat from "./MentalHealthSupportChat";
+import AppointmentScheduler from "./AppointmentScheduler";
+import MentalHealthAdminDashboard from "./MentalHealthAdminDashboard";
+import ResourceHub from "./ResourceHub";
 
 const FeaturesSection = () => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isResourcesOpen, setIsResourcesOpen] = useState(false);
+
+  const handleActionClick = (action: string) => {
+    switch (action) {
+      case "Start Chat":
+        setIsChatOpen(true);
+        break;
+      case "Book Appointment":
+        setIsBookingOpen(true);
+        break;
+      case "Browse Resources":
+        setIsResourcesOpen(true);
+        break;
+      case "View Analytics":
+        setIsAdminOpen(true);
+        break;
+      case "Join Community":
+        // TODO: Implement community feature
+        break;
+      default:
+        break;
+    }
+  };
+
   const features = [
     {
       icon: <MessageCircle className="h-8 w-8 text-primary" />,
@@ -114,7 +146,11 @@ const FeaturesSection = () => {
                 </div>
 
                 {/* Action Button */}
-                <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                <Button 
+                  variant="outline" 
+                  className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                  onClick={() => handleActionClick(feature.action)}
+                >
                   {feature.action}
                 </Button>
               </div>
@@ -152,6 +188,24 @@ const FeaturesSection = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal Components */}
+      <MentalHealthSupportChat 
+        isOpen={isChatOpen} 
+        onClose={() => setIsChatOpen(false)} 
+      />
+      <AppointmentScheduler 
+        isOpen={isBookingOpen} 
+        onClose={() => setIsBookingOpen(false)} 
+      />
+      <MentalHealthAdminDashboard 
+        isOpen={isAdminOpen} 
+        onClose={() => setIsAdminOpen(false)} 
+      />
+      <ResourceHub 
+        isOpen={isResourcesOpen} 
+        onClose={() => setIsResourcesOpen(false)} 
+      />
     </section>
   );
 };
