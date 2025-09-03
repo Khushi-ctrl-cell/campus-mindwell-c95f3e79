@@ -14,10 +14,95 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      appointments: {
+        Row: {
+          appointment_date: string
+          appointment_time: string
+          created_at: string
+          id: string
+          notes: string | null
+          purpose: string
+          status: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          appointment_date: string
+          appointment_time: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          purpose: string
+          status?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          appointment_date?: string
+          appointment_time?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          purpose?: string
+          status?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      chat_sessions: {
+        Row: {
+          created_at: string
+          escalated_to_human: boolean | null
+          id: string
+          message_count: number | null
+          satisfaction_rating: number | null
+          session_end: string | null
+          session_start: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          escalated_to_human?: boolean | null
+          id?: string
+          message_count?: number | null
+          satisfaction_rating?: number | null
+          session_end?: string | null
+          session_start?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          escalated_to_human?: boolean | null
+          id?: string
+          message_count?: number | null
+          satisfaction_rating?: number | null
+          session_end?: string | null
+          session_start?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      admin_analytics: {
+        Row: {
+          avg_satisfaction: number | null
+          escalated_sessions: number | null
+          month: string | null
+          total_sessions: number | null
+        }
+        Relationships: []
+      }
+      appointment_analytics: {
+        Row: {
+          completed_appointments: number | null
+          month: string | null
+          purpose: string | null
+          total_appointments: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
