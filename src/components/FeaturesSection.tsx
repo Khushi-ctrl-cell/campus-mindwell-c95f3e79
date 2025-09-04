@@ -40,7 +40,7 @@ const FeaturesSection = () => {
         setIsAdminOpen(true);
         break;
       case "Join Community":
-        // TODO: Implement community feature
+        window.location.href = "/peer-support";
         break;
       default:
         break;
