@@ -9,7 +9,7 @@ import { MessageCircle, Send, Bot, Shield, Clock, Heart } from "lucide-react";
 const AISupport = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Hello! I'm MindWell AI, your multilingual mental health and conversational support assistant. I'm here to provide safe, private support for mental health topics and also engage in general conversations. How are you feeling today? / ¡Hola! Soy MindWell AI. ¿Cómo te sientes hoy? / Bonjour! Comment vous sentez-vous aujourd'hui? / Hallo! Wie fühlen Sie sich heute?" }
+    { role: "assistant", content: "Hello! I'm MindWell AI, your multilingual mental health and conversational support assistant. I'm here to provide safe, private support for mental health topics and also engage in general conversations. How are you feeling today? / ¡Hola! Soy MindWell AI. ¿Cómo te sientes hoy? / Bonjour! Comment vous sentez-vous aujourd'hui? / Hallo! Wie fühlen Sie sich heute? / नमस्ते! मैं MindWell AI हूं। आज आप कैसा महसूस कर रहे हैं?" }
   ]);
 
   // Enhanced AI response system with multi-language and topic detection
@@ -17,9 +17,12 @@ const AISupport = () => {
     const spanishKeywords = ['hola', 'como', 'estoy', 'siento', 'ayuda', 'gracias', 'por favor'];
     const frenchKeywords = ['bonjour', 'comment', 'je suis', 'aide', 'merci', 's\'il vous plaît'];
     const germanKeywords = ['hallo', 'wie', 'ich bin', 'hilfe', 'danke', 'bitte'];
+    const hindiKeywords = ['नमस्ते', 'कैसे', 'मैं', 'हूं', 'हूँ', 'हैं', 'हो', 'मदद', 'धन्यवाद', 'कृपया', 'मुझे', 'आप'];
     
     const lowerText = text.toLowerCase();
     
+    // Check for Hindi (using Devanagari script detection)
+    if (hindiKeywords.some(keyword => text.includes(keyword)) || /[\u0900-\u097F]/.test(text)) return 'hi';
     if (spanishKeywords.some(keyword => lowerText.includes(keyword))) return 'es';
     if (frenchKeywords.some(keyword => lowerText.includes(keyword))) return 'fr';
     if (germanKeywords.some(keyword => lowerText.includes(keyword))) return 'de';
@@ -27,18 +30,27 @@ const AISupport = () => {
     return 'en';
   };
 
-  const detectTopic = (message: string): 'mental-health' | 'general' => {
+  const detectTopic = (message: string): 'mental-health' | 'medical' | 'general' => {
     const lowerMessage = message.toLowerCase();
     const mentalHealthKeywords = [
       'anxious', 'anxiety', 'stress', 'depressed', 'sad', 'worried', 'panic',
       'overwhelmed', 'tired', 'sleep', 'insomnia', 'lonely', 'isolated',
       'exam', 'study', 'pressure', 'feeling', 'emotion', 'cope', 'help',
-      'support', 'therapy', 'counseling', 'mental health'
+      'support', 'therapy', 'counseling', 'mental health',
+      // Hindi mental health keywords
+      'चिंता', 'तनाव', 'उदास', 'परेशान', 'घबराहट', 'अकेला', 'नींद', 'दुखी', 'डर', 'मानसिक स्वास्थ्य'
     ];
     
-    return mentalHealthKeywords.some(keyword => lowerMessage.includes(keyword)) 
-      ? 'mental-health' 
-      : 'general';
+    const medicalKeywords = [
+      'doctor', 'medicine', 'treatment', 'symptoms', 'pain', 'headache', 'fever',
+      'illness', 'disease', 'medication', 'hospital', 'health', 'medical',
+      // Hindi medical keywords  
+      'डॉक्टर', 'दवा', 'इलाज', 'लक्षण', 'दर्द', 'सिरदर्द', 'बुखार', 'बीमारी', 'स्वास्थ्य', 'अस्पताल', 'चिकित्सा'
+    ];
+    
+    if (mentalHealthKeywords.some(keyword => lowerMessage.includes(keyword) || message.includes(keyword))) return 'mental-health';
+    if (medicalKeywords.some(keyword => lowerMessage.includes(keyword) || message.includes(keyword))) return 'medical';
+    return 'general';
   };
 
   const getAIResponse = (userMessage: string): string => {
@@ -51,27 +63,31 @@ const AISupport = () => {
       'kill myself', 'suicide', 'end it all', 'want to die', 'hurt myself', 'self harm',
       'matarme', 'suicidio', 'quiero morir', 'hacerme daño',
       'me tuer', 'suicide', 'veux mourir', 'me faire du mal',
-      'mich umbringen', 'selbstmord', 'sterben will', 'mir schaden'
+      'mich umbringen', 'selbstmord', 'sterben will', 'mir schaden',
+      // Hindi crisis keywords
+      'आत्महत्या', 'मरना चाहता', 'खुद को मारना', 'जीना नहीं', 'खुद को नुकसान', 'मरने का मन'
     ];
     
-    if (crisisKeywords.some(keyword => lowerMessage.includes(keyword))) {
+    if (crisisKeywords.some(keyword => lowerMessage.includes(keyword) || userMessage.includes(keyword))) {
       const crisisResponses = {
         en: "I'm very concerned about what you've shared. Please reach out for immediate help:\n\n🚨 Emergency: Call 911\n📞 Crisis Text Line: Text HOME to 741741\n☎️ National Suicide Prevention Lifeline: 988\n\nYour life has value and there are people who want to help.",
         es: "Estoy muy preocupado/a por lo que has compartido. Por favor busca ayuda inmediata:\n\n🚨 Emergencia: Llama al 911\n📞 Línea de Crisis: Envía HOLA al 741741\n☎️ Línea Nacional de Prevención del Suicidio: 988\n\nTu vida tiene valor.",
         fr: "Je suis très préoccupé par ce que vous avez partagé. Veuillez chercher de l'aide immédiate:\n\n🚨 Urgence: Appelez le 911\n📞 Ligne de crise: Envoyez ACCUEIL au 741741\n\nVotre vie a de la valeur.",
-        de: "Ich bin sehr besorgt über das, was Sie geteilt haben. Bitte suchen Sie sofort Hilfe:\n\n🚨 Notfall: Rufen Sie 911 an\n📞 Krisenlinie: Senden Sie HEIMAT an 741741\n\nIhr Leben hat Wert."
+        de: "Ich bin sehr besorgt über das, was Sie geteilt haben. Bitte suchen Sie sofort Hilfe:\n\n🚨 Notfall: Rufen Sie 911 an\n📞 Krisenlinie: Senden Sie HEIMAT an 741741\n\nIhr Leben hat Wert.",
+        hi: "आपने जो साझा किया है उससे मैं बहुत चिंतित हूं। कृपया तुरंत मदद लें:\n\n🚨 आपातकाल: 911 कॉल करें\n📞 क्राइसिस हेल्पलाइन: 1075\n☎️ मानसिक स्वास्थ्य हेल्पलाइन: +91-9152987821\n\nआपकी जिंदगी महत्वपूर्ण है और लोग आपकी मदद करना चाहते हैं।"
       };
       
       return crisisResponses[language as keyof typeof crisisResponses] || crisisResponses.en;
     }
 
     if (topic === 'mental-health') {
-      if (lowerMessage.includes('anxious') || lowerMessage.includes('anxiety')) {
+      if (lowerMessage.includes('anxious') || lowerMessage.includes('anxiety') || userMessage.includes('चिंता') || userMessage.includes('घबराहट')) {
         const responses = {
           en: "I understand you're feeling anxious. Try the 5-4-3-2-1 grounding technique: Name 5 things you see, 4 you can touch, 3 you hear, 2 you smell, 1 you taste. Deep breathing also helps. What's causing your anxiety?",
           es: "Entiendo que te sientes ansioso/a. Prueba la técnica 5-4-3-2-1: Nombra 5 cosas que ves, 4 que puedes tocar, 3 que escuchas, 2 que hueles, 1 que saboreas. ¿Qué está causando tu ansiedad?",
           fr: "Je comprends que vous vous sentez anxieux. Essayez la technique 5-4-3-2-1: Nommez 5 choses que vous voyez, 4 que vous touchez, 3 que vous entendez, 2 que vous sentez, 1 que vous goûtez.",
-          de: "Ich verstehe, dass Sie sich ängstlich fühlen. Versuchen Sie die 5-4-3-2-1-Technik: Nennen Sie 5 Dinge, die Sie sehen, 4, die Sie berühren können, 3, die Sie hören, 2, die Sie riechen, 1, das Sie schmecken."
+          de: "Ich verstehe, dass Sie sich ängstlich fühlen. Versuchen Sie die 5-4-3-2-1-Technik: Nennen Sie 5 Dinge, die Sie sehen, 4, die Sie berühren können, 3, die Sie hören, 2, die Sie riechen, 1, das Sie schmecken.",
+          hi: "मैं समझ सकता हूं कि आप चिंतित महसूस कर रहे हैं। 5-4-3-2-1 ग्राउंडिंग तकनीक आज़माएं: 5 चीजों के नाम बताएं जो आप देख सकते हैं, 4 जिन्हें छू सकते हैं, 3 जो सुन सकते हैं, 2 जिन्हें सूंघ सकते हैं, 1 जिसका स्वाद ले सकते हैं। गहरी सांस लेना भी मदद करता है। आपकी चिंता का कारण क्या है?"
         };
         
         return responses[language as keyof typeof responses] || responses.en;
@@ -81,10 +97,21 @@ const AISupport = () => {
         en: "Thank you for sharing with me. Your feelings are valid and it's important you're reaching out. I'm here to listen and support you. Would you like to explore some coping strategies?",
         es: "Gracias por compartir conmigo. Tus sentimientos son válidos y es importante que busques apoyo. Estoy aquí para escucharte. ¿Te gustaría explorar algunas estrategias de afrontamiento?",
         fr: "Merci de partager avec moi. Vos sentiments sont valides et il est important que vous cherchiez du soutien. Je suis là pour vous écouter.",
-        de: "Danke, dass Sie das mit mir geteilt haben. Ihre Gefühle sind berechtigt und es ist wichtig, dass Sie Unterstützung suchen. Ich bin hier, um zuzuhören."
+        de: "Danke, dass Sie das mit mir geteilt haben. Ihre Gefühle sind berechtigt und es ist wichtig, dass Sie Unterstützung suchen. Ich bin hier, um zuzuhören.",
+        hi: "मेरे साथ साझा करने के लिए धन्यवाद। आपकी भावनाएं सही हैं और यह महत्वपूर्ण है कि आप मदद मांग रहे हैं। मैं यहां सुनने और आपका साथ देने के लिए हूं। क्या आप कुछ मुकाबला करने की रणनीतियों पर चर्चा करना चाहेंगे?"
       };
       
       return mentalHealthResponses[language as keyof typeof mentalHealthResponses] || mentalHealthResponses.en;
+    } else if (topic === 'medical') {
+      const medicalResponses = {
+        en: "I understand you have health-related concerns. While I can provide general wellness information and emotional support, I strongly recommend consulting with a qualified healthcare professional for medical advice. Your health is important. Is there anything specific you'd like to discuss about how you're feeling?",
+        es: "Entiendo que tienes preocupaciones relacionadas con la salud. Aunque puedo proporcionar información general de bienestar y apoyo emocional, recomiendo encarecidamente consultar con un profesional de la salud calificado para obtener consejos médicos. Tu salud es importante. ¿Hay algo específico que te gustaría discutir sobre cómo te sientes?",
+        fr: "Je comprends que vous avez des préoccupations liées à la santé. Bien que je puisse fournir des informations générales sur le bien-être et un soutien émotionnel, je recommande fortement de consulter un professionnel de la santé qualifié pour des conseils médicaux. Votre santé est importante.",
+        de: "Ich verstehe, dass Sie gesundheitsbezogene Bedenken haben. Obwohl ich allgemeine Wellness-Informationen und emotionale Unterstützung bieten kann, empfehle ich dringend, einen qualifizierten Gesundheitsexperten für medizinische Beratung zu konsultieren. Ihre Gesundheit ist wichtig.",
+        hi: "मैं समझता हूं कि आपको स्वास्थ्य संबंधी चिंताएं हैं। जबकि मैं सामान्य कल्याण जानकारी और भावनात्मक सहायता प्रदान कर सकता हूं, मैं दृढ़ता से सुझाता हूं कि चिकित्सा सलाह के लिए किसी योग्य स्वास्थ्य पेशेवर से सलाह लें। आपका स्वास्थ्य महत्वपूर्ण है। क्या आप अपनी भावनाओं के बारे में कुछ खास चर्चा करना चाहेंगे?"
+      };
+      
+      return medicalResponses[language as keyof typeof medicalResponses] || medicalResponses.en;
     } else {
       const generalResponses = {
         en: [
@@ -103,6 +130,10 @@ const AISupport = () => {
         de: [
           "Das ist interessant! Ich bin sowohl für psychische Gesundheit als auch für allgemeine Gespräche da. Wie fühlen Sie sich heute?",
           "Danke fürs Teilen! Obwohl ich für psychische Gesundheit entwickelt wurde, spreche ich gerne über verschiedene Themen."
+        ],
+        hi: [
+          "यह दिलचस्प है! मैं मानसिक स्वास्थ्य सहायता और सामान्य बातचीत दोनों के लिए यहां हूं। आज आप कैसा महसूस कर रहे हैं?",
+          "साझा करने के लिए धन्यवाद! जबकि मैं मानसिक स्वास्थ्य सहायता के लिए डिज़ाइन किया गया हूं, मुझे विभिन्न विषयों पर चर्चा करना अच्छा लगता है। क्या आपके मन में कोई बात है?"
         ]
       };
       
@@ -198,7 +229,7 @@ const AISupport = () => {
             <div className="mt-6">
               <p className="text-sm text-muted-foreground mb-3">Quick topics to get started:</p>
             <div className="flex flex-wrap gap-2">
-              {["I'm feeling anxious", "I'm stressed about exams", "I need someone to talk to", "I'm having trouble sleeping", "¡Hola! ¿Cómo estás?", "Bonjour, comment ça va?"].map((topic) => (
+              {["I'm feeling anxious", "I'm stressed about exams", "I need someone to talk to", "I'm having trouble sleeping", "¡Hola! ¿Cómo estás?", "Bonjour, comment ça va?", "मुझे चिंता हो रही है", "डॉक्टर से मिलना है", "नमस्ते! आप कैसे हैं?"].map((topic) => (
                 <Button
                   key={topic}
                   variant="outline"
