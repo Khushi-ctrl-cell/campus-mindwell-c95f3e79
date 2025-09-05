@@ -11,17 +11,84 @@ const ChatInterface = () => {
     {
       id: 1,
       type: "bot",
-      content: "Hello! I'm here to provide mental health support and resources. How are you feeling today?",
+      content: "Hello! I'm your multilingual mental health and conversational support assistant. I'm here for both emotional support and friendly chat. How are you feeling today? ¿Cómo te sientes? Comment allez-vous?",
       timestamp: new Date()
     }
   ]);
+
+  const detectLanguage = (text: string): string => {
+    const spanishKeywords = ['hola', 'como', 'estoy', 'siento', 'ayuda', 'gracias'];
+    const frenchKeywords = ['bonjour', 'comment', 'je suis', 'aide', 'merci'];
+    const germanKeywords = ['hallo', 'wie', 'ich bin', 'hilfe', 'danke'];
+    
+    const lowerText = text.toLowerCase();
+    
+    if (spanishKeywords.some(keyword => lowerText.includes(keyword))) return 'es';
+    if (frenchKeywords.some(keyword => lowerText.includes(keyword))) return 'fr';
+    if (germanKeywords.some(keyword => lowerText.includes(keyword))) return 'de';
+    
+    return 'en';
+  };
+
+  const detectTopic = (message: string): 'mental-health' | 'general' => {
+    const lowerMessage = message.toLowerCase();
+    const mentalHealthKeywords = [
+      'anxious', 'anxiety', 'stress', 'depressed', 'sad', 'worried', 'panic',
+      'overwhelmed', 'tired', 'sleep', 'insomnia', 'lonely', 'isolated',
+      'exam', 'study', 'pressure', 'feeling', 'emotion', 'cope', 'help'
+    ];
+    
+    return mentalHealthKeywords.some(keyword => lowerMessage.includes(keyword)) 
+      ? 'mental-health' 
+      : 'general';
+  };
+
+  const getAIResponse = (userMessage: string): string => {
+    const language = detectLanguage(userMessage);
+    const topic = detectTopic(userMessage);
+    
+    if (topic === 'mental-health') {
+      const responses = {
+        en: "Thank you for sharing that with me. I understand this can be difficult. Let me help you with some coping strategies and support. Your feelings are valid and I'm here to listen.",
+        es: "Gracias por compartir eso conmigo. Entiendo que esto puede ser difícil. Déjame ayudarte con algunas estrategias de afrontamiento y apoyo.",
+        fr: "Merci de partager cela avec moi. Je comprends que cela peut être difficile. Laissez-moi vous aider avec des stratégies d'adaptation.",
+        de: "Danke, dass Sie das mit mir geteilt haben. Ich verstehe, dass das schwierig sein kann. Lassen Sie mich Ihnen mit Bewältigungsstrategien helfen."
+      };
+      
+      return responses[language as keyof typeof responses] || responses.en;
+    } else {
+      const responses = {
+        en: [
+          "That's interesting! I'm here for both mental health support and general conversation. How are you doing today?",
+          "Thanks for sharing! I enjoy our conversations. Is there anything specific on your mind you'd like to discuss?"
+        ],
+        es: [
+          "¡Qué interesante! Estoy aquí tanto para apoyo en salud mental como para conversación general. ¿Cómo estás hoy?",
+          "¡Gracias por compartir! Disfruto nuestras conversaciones. ¿Hay algo específico que te gustaría discutir?"
+        ],
+        fr: [
+          "C'est intéressant! Je suis là pour le soutien en santé mentale et la conversation générale. Comment allez-vous aujourd'hui?",
+          "Merci de partager! J'apprécie nos conversations. Y a-t-il quelque chose de spécifique dont vous aimeriez parler?"
+        ],
+        de: [
+          "Das ist interessant! Ich bin sowohl für psychische Gesundheit als auch für allgemeine Gespräche da. Wie geht es Ihnen heute?",
+          "Danke fürs Teilen! Ich schätze unsere Gespräche. Gibt es etwas Bestimmtes, worüber Sie sprechen möchten?"
+        ]
+      };
+      
+      const langResponses = responses[language as keyof typeof responses] || responses.en;
+      return langResponses[Math.floor(Math.random() * langResponses.length)];
+    }
+  };
   const [inputValue, setInputValue] = useState("");
 
   const quickActions = [
     "I'm feeling anxious",
     "I'm stressed about exams",
     "I need someone to talk to",
-    "I'm having trouble sleeping"
+    "I'm having trouble sleeping",
+    "¡Hola! ¿Cómo estás?",
+    "Bonjour, comment ça va?"
   ];
 
   const handleSendMessage = () => {
@@ -39,12 +106,12 @@ const ChatInterface = () => {
     setMessages([...messages, newMessage]);
     setInputValue("");
 
-    // Simulate bot response
+    // Simulate bot response with enhanced AI
     setTimeout(() => {
       const botResponse = {
         id: messages.length + 2,
         type: "bot",
-        content: "Thank you for sharing that with me. I understand this can be difficult. Let me help you with some coping strategies...",
+        content: getAIResponse(sanitized),
         timestamp: new Date()
       };
       setMessages(prev => [...prev, botResponse]);
@@ -60,12 +127,12 @@ const ChatInterface = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center space-y-4 mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-            AI Mental Health Support
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Get immediate, confidential support through our AI-powered chat system designed specifically for student mental health.
-          </p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
+              Multilingual AI Mental Health Support
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Get immediate, confidential support through our AI-powered chat system designed for both mental health support and general conversation in multiple languages.
+            </p>
           
           {/* Privacy Indicators */}
           <div className="flex justify-center gap-6 pt-4">
@@ -90,7 +157,7 @@ const ChatInterface = () => {
               </div>
               <div>
                 <h3 className="font-semibold">Campus MindWell AI</h3>
-                <p className="text-xs opacity-90">Mental Health Support Assistant</p>
+                <p className="text-xs opacity-90">Multilingual Mental Health & Conversational Assistant</p>
               </div>
               <Badge variant="secondary" className="ml-auto bg-white/20 text-primary-foreground border-white/30">
                 Online
