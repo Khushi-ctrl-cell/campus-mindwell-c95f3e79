@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PeerSupport from "./pages/PeerSupport";
 import AISupport from "./pages/AISupport";
+import MultilingualAISupport from "./pages/MultilingualAISupport";
 import Resources from "./pages/Resources";
 import BookSession from "./pages/BookSession";
 import Auth from "./pages/Auth";
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/peer-support" element={<PeerSupport />} />
           <Route path="/ai-support" element={<AISupport />} />
+          <Route path="/multilingual-ai-support" element={<MultilingualAISupport />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/book-session" element={<BookSession />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

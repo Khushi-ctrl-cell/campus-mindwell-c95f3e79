@@ -27,6 +27,11 @@ const Navigation = () => {
                 AI Support
               </Button>
             </Link>
+            <Link to="/multilingual-ai-support">
+              <Button variant="ghost" size="sm">
+                🤖 Multilingual AI
+              </Button>
+            </Link>
             <Link to="/resources">
               <Button variant="ghost" size="sm">
                 <BookOpen className="h-4 w-4 mr-2" />
@@ -66,6 +71,11 @@ const Navigation = () => {
               <Button variant="ghost" className="w-full justify-start">
                 <MessageCircle className="h-4 w-4 mr-2" />
                 AI Support
+              </Button>
+            </Link>
+            <Link to="/multilingual-ai-support" onClick={() => setIsOpen(false)}>
+              <Button variant="ghost" className="w-full justify-start">
+                🤖 Multilingual AI
               </Button>
             </Link>
             <Link to="/resources" onClick={() => setIsOpen(false)}>
