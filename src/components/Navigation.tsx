@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Heart, MessageCircle, Calendar, BookOpen } from "lucide-react";
+import { Menu, X, Heart, MessageCircle, Calendar, BookOpen, LogIn } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
@@ -39,9 +39,12 @@ const Navigation = () => {
                 Book Session
               </Button>
             </Link>
-            <Button variant="default" size="sm">
-              Get Help Now
-            </Button>
+            <Link to="/auth">
+              <Button variant="default" size="sm">
+                <LogIn className="h-4 w-4 mr-2" />
+                Login
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -77,9 +80,12 @@ const Navigation = () => {
                 Book Session
               </Button>
             </Link>
-            <Button variant="default" className="w-full">
-              Get Help Now
-            </Button>
+            <Link to="/auth" onClick={() => setIsOpen(false)}>
+              <Button variant="default" className="w-full justify-start">
+                <LogIn className="h-4 w-4 mr-2" />
+                Login
+              </Button>
+            </Link>
           </div>
         )}
       </div>
