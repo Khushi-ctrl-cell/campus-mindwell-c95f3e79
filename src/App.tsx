@@ -9,6 +9,7 @@ import PeerSupport from "./pages/PeerSupport";
 import AISupport from "./pages/AISupport";
 import Resources from "./pages/Resources";
 import BookSession from "./pages/BookSession";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/peer-support" element={<PeerSupport />} />
           <Route path="/ai-support" element={<AISupport />} />
           <Route path="/resources" element={<Resources />} />
