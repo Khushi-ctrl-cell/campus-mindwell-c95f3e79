@@ -11,7 +11,7 @@ const ChatInterface = () => {
     {
       id: 1,
       type: "bot",
-      content: "Hello! I'm your multilingual mental health and conversational support assistant. I'm here for both emotional support and friendly chat. How are you feeling today? ¿Cómo te sientes? Comment allez-vous?",
+      content: "Hi! I'm Campus MindWell, your mental health friend. 🤗 Let's do a quick check-in - on a scale of 1-10, how's your mood today? I'm here for everything from casual chats to serious support. मैं आपका साथी हूं। आप कैसा महसूस कर रहे हैं?",
       timestamp: new Date()
     }
   ]);
@@ -46,33 +46,35 @@ const ChatInterface = () => {
   const getAIResponse = (userMessage: string): string => {
     const language = detectLanguage(userMessage);
     const topic = detectTopic(userMessage);
+    const lowerMessage = userMessage.toLowerCase();
+    
+    // Crisis detection for Indian context
+    const crisisKeywords = [
+      'kill myself', 'suicide', 'end it all', 'want to die', 'hurt myself', 'self harm',
+      'आत्महत्या', 'मरना चाहता', 'मरना चाहती', 'खुद को मारना', 'जीना नहीं चाहता'
+    ];
+    
+    if (crisisKeywords.some(keyword => lowerMessage.includes(keyword) || userMessage.includes(keyword))) {
+      return "🚨 **IMMEDIATE SUPPORT NEEDED** - I'm very concerned about you. Please reach out right now:\n\n📞 **iCall**: 9152987821 (24/7)\n📞 **AASRA**: 91-9820466726 (24/7)\n📞 **Vandrevala Foundation**: 9999 666 555\n📞 **Emergency**: 112\n\n🏥 Your college counselor is available too. Your life matters deeply. You're not alone.";
+    }
     
     if (topic === 'mental-health') {
       const responses = {
-        en: "Thank you for sharing that with me. I understand this can be difficult. Let me help you with some coping strategies and support. Your feelings are valid and I'm here to listen.",
-        es: "Gracias por compartir eso conmigo. Entiendo que esto puede ser difícil. Déjame ayudarte con algunas estrategias de afrontamiento y apoyo.",
-        fr: "Merci de partager cela avec moi. Je comprends que cela peut être difficile. Laissez-moi vous aider avec des stratégies d'adaptation.",
-        de: "Danke, dass Sie das mit mir geteilt haben. Ich verstehe, dass das schwierig sein kann. Lassen Sie mich Ihnen mit Bewältigungsstrategien helfen."
+        en: "I hear you, and I'm glad you're reaching out. College mental health is so important. Here's some quick support:\n\n1. Your feelings are completely valid\n2. Remember: You're more than your grades or performance\n3. Your college counselor is there for you (usually free!)\n4. **Crisis support**: 1800-599-0019 available 24/7\n\n**Disclaimer**: I provide support, not medical advice. For professional help, please contact your college counselor.\n\nWant to tell me more about what's going on?",
+        hi: "मैं आपकी बात सुन रहा हूं, और खुशी है कि आप मदद मांग रहे हैं। कॉलेज में मानसिक स्वास्थ्य बहुत महत्वपूर्ण है:\n\n1. आपकी भावनाएं बिल्कुल सही हैं\n2. याद रखें: आप अपने नंबरों से कहीं ज्यादा हैं\n3. आपका कॉलेज काउंसलर आपके लिए है (आमतौर पर मुफ़्त!)\n4. **क्राइसिस सपोर्ट**: 1800-599-0019 (24/7)\n\n**अस्वीकरण**: मैं सहायता प्रदान करता हूं, चिकित्सा सलाह नहीं।\n\nक्या आप और बताना चाहेंगे कि क्या हो रहा है?"
       };
       
       return responses[language as keyof typeof responses] || responses.en;
     } else {
       const responses = {
         en: [
-          "That's interesting! I'm here for both mental health support and general conversation. How are you doing today?",
-          "Thanks for sharing! I enjoy our conversations. Is there anything specific on your mind you'd like to discuss?"
+          "That's cool to chat about! As Campus MindWell, I'm here for both everyday conversations and mental health check-ins. How are you feeling overall today?",
+          "Thanks for sharing! I love connecting with students. College life has its ups and downs - how are you handling everything lately?",
+          "Nice topic! I'm here for whatever you need - light conversation or deeper support. Anything weighing on your mind today?"
         ],
-        es: [
-          "¡Qué interesante! Estoy aquí tanto para apoyo en salud mental como para conversación general. ¿Cómo estás hoy?",
-          "¡Gracias por compartir! Disfruto nuestras conversaciones. ¿Hay algo específico que te gustaría discutir?"
-        ],
-        fr: [
-          "C'est intéressant! Je suis là pour le soutien en santé mentale et la conversation générale. Comment allez-vous aujourd'hui?",
-          "Merci de partager! J'apprécie nos conversations. Y a-t-il quelque chose de spécifique dont vous aimeriez parler?"
-        ],
-        de: [
-          "Das ist interessant! Ich bin sowohl für psychische Gesundheit als auch für allgemeine Gespräche da. Wie geht es Ihnen heute?",
-          "Danke fürs Teilen! Ich schätze unsere Gespräche. Gibt es etwas Bestimmtes, worüber Sie sprechen möchten?"
+        hi: [
+          "इस बारे में बात करना अच्छा है! Campus MindWell के रूप में, मैं रोज़ाना की बातचीत और मानसिक स्वास्थ्य दोनों के लिए यहां हूं। आज आप कैसा महसूस कर रहे हैं?",
+          "साझा करने के लिए धन्यवाद! मुझे छात्रों से जुड़ना अच्छा लगता है। कॉलेज जीवन में उतार-चढ़ाव होते हैं - आप सब कुछ कैसे संभाल रहे हैं?"
         ]
       };
       
@@ -83,12 +85,14 @@ const ChatInterface = () => {
   const [inputValue, setInputValue] = useState("");
 
   const quickActions = [
-    "I'm feeling anxious",
-    "I'm stressed about exams",
-    "I need someone to talk to",
-    "I'm having trouble sleeping",
-    "¡Hola! ¿Cómo estás?",
-    "Bonjour, comment ça va?"
+    "Mood check: I'm feeling 3/10 today",
+    "Exam stress is overwhelming",
+    "Family pressure about grades",
+    "Can't sleep - racing thoughts",
+    "Feeling isolated from classmates",
+    "Need coping strategies for anxiety",
+    "नमस्ते! मुझे चिंता हो रही है",
+    "मैं पढ़ाई का तनाव महसूस कर रहा हूं"
   ];
 
   const handleSendMessage = () => {
@@ -156,8 +160,8 @@ const ChatInterface = () => {
                 <Bot className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="font-semibold">Campus MindWell AI</h3>
-                <p className="text-xs opacity-90">Multilingual Mental Health & Conversational Assistant</p>
+                <h3 className="font-semibold">Campus MindWell</h3>
+                <p className="text-xs opacity-90">Your Mental Health Friend • Private & Safe</p>
               </div>
               <Badge variant="secondary" className="ml-auto bg-white/20 text-primary-foreground border-white/30">
                 Online
@@ -238,10 +242,12 @@ const ChatInterface = () => {
           </div>
         </Card>
 
-        {/* Disclaimer */}
-        <p className="text-center text-xs text-muted-foreground mt-6 max-w-2xl mx-auto">
-          This AI assistant provides general mental health support and resources. In case of emergency or crisis, please contact your campus counseling center or call emergency services immediately.
-        </p>
+        {/* Enhanced Disclaimer */}
+        <div className="text-center text-xs text-muted-foreground mt-6 max-w-3xl mx-auto space-y-2">
+          <p className="font-medium">🛡️ Your Privacy: All chats are confidential and never shared</p>
+          <p>⚕️ **Medical Disclaimer**: Campus MindWell provides supportive guidance, not medical advice. For professional help, contact your college counselor.</p>
+          <p>🚨 **Crisis Support**: If you're in immediate danger, call 112 or contact: iCall (9152987821), AASRA (91-9820466726)</p>
+        </div>
       </div>
     </section>
   );
