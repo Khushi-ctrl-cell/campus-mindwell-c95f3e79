@@ -11,21 +11,35 @@ const ChatInterface = () => {
     {
       id: 1,
       type: "bot",
-      content: "Hi! I'm Campus MindWell, your mental health friend. 🤗 Let's do a quick check-in - on a scale of 1-10, how's your mood today? I'm here for everything from casual chats to serious support. मैं आपका साथी हूं। आप कैसा महसूस कर रहे हैं?",
+      content: "Hello! I'm Campus MindWell, your friendly AI companion. 🤗 I'm here to chat about anything - from daily stress to mental health support, study tips, or just casual conversation. How are you feeling today? मैं आपका मित्र हूं, आप कैसा महसूस कर रहे हैं?",
       timestamp: new Date()
     }
   ]);
 
   const detectLanguage = (text: string): string => {
-    const spanishKeywords = ['hola', 'como', 'estoy', 'siento', 'ayuda', 'gracias'];
-    const frenchKeywords = ['bonjour', 'comment', 'je suis', 'aide', 'merci'];
-    const germanKeywords = ['hallo', 'wie', 'ich bin', 'hilfe', 'danke'];
+    const hindiKeywords = ['नमस्ते', 'मैं', 'हूं', 'हूँ', 'कैसे', 'क्या', 'आप', 'मुझे', 'चिंता', 'तनाव', 'परेशान', 'दुखी', 'खुश', 'ठीक', 'अच्छा'];
+    const bengaliKeywords = ['আমি', 'কেমন', 'আছি', 'ভালো', 'খারাপ', 'চিন্তা', 'সমস্যা'];
+    const teluguKeywords = ['నాకు', 'ఎలా', 'ఉన్నాను', 'బాగా', 'చెడ్డ', 'సమస్య'];
+    const tamilKeywords = ['எனக்கு', 'எப்படி', 'இருக்கிறேன்', 'நல்ல', 'கெட்ட', 'பிரச்சனை'];
+    const gujaratiKeywords = ['મને', 'કેવી', 'છું', 'સારું', 'ખરાબ', 'સમસ્યા'];
+    const marathiKeywords = ['मला', 'कसे', 'आहे', 'चांगले', 'वाईट', 'समस्या'];
+    const kannadaKeywords = ['ನನಗೆ', 'ಹೇಗೆ', 'ಇದ್ದೇನೆ', 'ಒಳ್ಳೆಯದು', 'ಕೆಟ್ಟದು'];
+    const malayalamKeywords = ['എനിക്ക്', 'എങ്ങനെ', 'ഉണ്ട്', 'നല്ലത്', 'മോശം'];
+    const punjabiKeywords = ['ਮੈਨੂੰ', 'ਕਿਵੇਂ', 'ਹਾਂ', 'ਚੰਗਾ', 'ਮਾੜਾ'];
+    const urduKeywords = ['میں', 'کیسے', 'ہوں', 'اچھا', 'برا', 'پریشان'];
     
     const lowerText = text.toLowerCase();
     
-    if (spanishKeywords.some(keyword => lowerText.includes(keyword))) return 'es';
-    if (frenchKeywords.some(keyword => lowerText.includes(keyword))) return 'fr';
-    if (germanKeywords.some(keyword => lowerText.includes(keyword))) return 'de';
+    if (hindiKeywords.some(keyword => text.includes(keyword) || lowerText.includes(keyword))) return 'hi';
+    if (bengaliKeywords.some(keyword => text.includes(keyword))) return 'bn';
+    if (teluguKeywords.some(keyword => text.includes(keyword))) return 'te';
+    if (tamilKeywords.some(keyword => text.includes(keyword))) return 'ta';
+    if (gujaratiKeywords.some(keyword => text.includes(keyword))) return 'gu';
+    if (marathiKeywords.some(keyword => text.includes(keyword))) return 'mr';
+    if (kannadaKeywords.some(keyword => text.includes(keyword))) return 'kn';
+    if (malayalamKeywords.some(keyword => text.includes(keyword))) return 'ml';
+    if (punjabiKeywords.some(keyword => text.includes(keyword))) return 'pa';
+    if (urduKeywords.some(keyword => text.includes(keyword))) return 'ur';
     
     return 'en';
   };
@@ -51,48 +65,56 @@ const ChatInterface = () => {
     // Crisis detection for Indian context
     const crisisKeywords = [
       'kill myself', 'suicide', 'end it all', 'want to die', 'hurt myself', 'self harm',
-      'आत्महत्या', 'मरना चाहता', 'मरना चाहती', 'खुद को मारना', 'जीना नहीं चाहता'
+      'आत्महत्या', 'मरना चाहता', 'मरना चाहती', 'खुद को मारना', 'जीना नहीं चाहता',
+      'মরতে চাই', 'আত্মহত্যা', 'చావాలని', 'ആത്മഹത്യ', 'ಸಾಯಬೇಕು', 'મરવું', 'मरायचे'
     ];
     
     if (crisisKeywords.some(keyword => lowerMessage.includes(keyword) || userMessage.includes(keyword))) {
-      return "🚨 **IMMEDIATE SUPPORT NEEDED** - I'm very concerned about you. Please reach out right now:\n\n📞 **iCall**: 9152987821 (24/7)\n📞 **AASRA**: 91-9820466726 (24/7)\n📞 **Vandrevala Foundation**: 9999 666 555\n📞 **Emergency**: 112\n\n🏥 Your college counselor is available too. Your life matters deeply. You're not alone.";
+      return "🚨 **IMMEDIATE SUPPORT NEEDED** - I'm very concerned about you. Please reach out right now:\n\n📞 **iCall**: 9152987821 (24/7)\n📞 **AASRA**: 91-9820466726 (24/7)\n📞 **Vandrevala Foundation**: 9999 666 555\n📞 **Emergency**: 112\n\n🏥 Your college counselor is available too. **Reminder: I'm not a doctor. For emergencies, please reach a professional or helpline.** Your life matters deeply.";
     }
     
     if (topic === 'mental-health') {
       const responses = {
-        en: "I hear you, and I'm glad you're reaching out. College mental health is so important. Here's some quick support:\n\n1. Your feelings are completely valid\n2. Remember: You're more than your grades or performance\n3. Your college counselor is there for you (usually free!)\n4. **Crisis support**: 1800-599-0019 available 24/7\n\n**Disclaimer**: I provide support, not medical advice. For professional help, please contact your college counselor.\n\nWant to tell me more about what's going on?",
-        hi: "मैं आपकी बात सुन रहा हूं, और खुशी है कि आप मदद मांग रहे हैं। कॉलेज में मानसिक स्वास्थ्य बहुत महत्वपूर्ण है:\n\n1. आपकी भावनाएं बिल्कुल सही हैं\n2. याद रखें: आप अपने नंबरों से कहीं ज्यादा हैं\n3. आपका कॉलेज काउंसलर आपके लिए है (आमतौर पर मुफ़्त!)\n4. **क्राइसिस सपोर्ट**: 1800-599-0019 (24/7)\n\n**अस्वीकरण**: मैं सहायता प्रदान करता हूं, चिकित्सा सलाह नहीं।\n\nक्या आप और बताना चाहेंगे कि क्या हो रहा है?"
+        en: "I'm here to listen and support you. Here are some gentle steps that might help:\n\n**Quick Support:**\n1. Take 3 deep breaths right now\n2. Your feelings are completely valid\n3. You're stronger than you think\n4. Consider talking to your college counselor (usually free!)\n\n**Remember:** I'm not a doctor. For serious concerns, please reach a professional or helpline (iCall: 9152987821).\n\nWant to share more about how you're feeling?",
+        hi: "मैं आपकी बात सुनने और आपका साथ देने के लिए यहां हूं। यहां कुछ सरल कदम हैं जो मदद कर सकते हैं:\n\n**तुरंत सहायता:**\n1. अभी 3 गहरी सांसें लें\n2. आपकी भावनाएं बिल्कुल सही हैं\n3. आप अपने से कहीं ज्यादा मजबूत हैं\n4. अपने कॉलेज काउंसलर से बात करने पर विचार करें\n\n**याद रखें:** मैं डॉक्टर नहीं हूं। गंभीर चिंताओं के लिए, कृपया किसी पेशेवर या हेल्पलाइन से संपर्क करें।\n\nआप कैसा महसूस कर रहे हैं, और बताना चाहेंगे?",
+        bn: "আমি আপনার কথা শুনতে এবং সাহায্য করতে এখানে আছি। এখানে কিছু সহজ পদক্ষেপ যা সাহায্য করতে পারে:\n\n**দ্রুত সহায়তা:**\n1. এখনই ৩টি গভীর শ্বাস নিন\n2. আপনার অনুভূতি সম্পূর্ণ বৈধ\n3. আপনি নিজের চেয়ে অনেক শক্তিশালী\n\n**মনে রাখবেন:** আমি ডাক্তার নই। গুরুতর সমস্যার জন্য পেশাদার সাহায্য নিন।",
+        te: "నేను మీ మాట వినడానికి మరియు మీకు సహాయం చేయడానికి ఇక్కడ ఉన్నాను:\n\n**త్వరిత సహాయం:**\n1. ఇప్పుడే 3 లోతైన శ్వాసలు తీసుకోండి\n2. మీ భావనలు పూర్తిగా సరైనవి\n3. మీరు అనుకున్నదానికంటే బలంగా ఉన్నారు\n\n**గుర్తుంచుకోండి:** నేను వైద్యుడిని కాదు। తీవ్రమైన సమస్యలకు వైద్య సహాయం తీసుకోండి।",
+        ta: "நான் உங்கள் பேச்சைக் கேட்க இங்கே இருக்கிறேன்:\n\n**உடனடி உதவி:**\n1. இப்போதே 3 ஆழமான மூச்சுகள் எடுங்கள்\n2. உங்கள் உணர்வுகள் முற்றிலும் சரியானவை\n3. நீங்கள் நினைப்பதை விட வலிமையானவர்\n\n**நினைவில் கொள்ளுங்கள்:** நான் டாக்டர் அல்ல। தீவிர கவலைகளுக்கு தொழில்முறை உதவி பெறுங்கள்।"
       };
       
       return responses[language as keyof typeof responses] || responses.en;
     } else {
       const responses = {
         en: [
-          "That's cool to chat about! As Campus MindWell, I'm here for both everyday conversations and mental health check-ins. How are you feeling overall today?",
-          "Thanks for sharing! I love connecting with students. College life has its ups and downs - how are you handling everything lately?",
-          "Nice topic! I'm here for whatever you need - light conversation or deeper support. Anything weighing on your mind today?"
+          "That's interesting! I'm Campus MindWell, and I love chatting about anything. How's college treating you lately?",
+          "Thanks for sharing! I'm here for both casual conversations and support when needed. What's on your mind today?",
+          "Cool topic! I enjoy connecting with students about all sorts of things. How are you feeling overall?",
+          "Nice! As your AI companion, I'm curious about your thoughts. Anything exciting or challenging happening in your life?"
         ],
         hi: [
-          "इस बारे में बात करना अच्छा है! Campus MindWell के रूप में, मैं रोज़ाना की बातचीत और मानसिक स्वास्थ्य दोनों के लिए यहां हूं। आज आप कैसा महसूस कर रहे हैं?",
-          "साझा करने के लिए धन्यवाद! मुझे छात्रों से जुड़ना अच्छा लगता है। कॉलेज जीवन में उतार-चढ़ाव होते हैं - आप सब कुछ कैसे संभाल रहे हैं?"
+          "यह दिलचस्प है! मैं Campus MindWell हूं, और मुझे किसी भी बारे में बात करना अच्छा लगता है। कॉलेज कैसा चल रहा है?",
+          "साझा करने के लिए धन्यवाद! मैं आकस्मिक बातचीत और जरूरत पड़ने पर सहायता दोनों के लिए यहां हूं। आज आपके मन में क्या है?",
+          "बढ़िया विषय! मुझे छात्रों से हर तरह की बातों के बारे में बात करना अच्छा लगता है। आप कैसा महसूस कर रहे हैं?"
         ]
       };
       
       const langResponses = responses[language as keyof typeof responses] || responses.en;
-      return langResponses[Math.floor(Math.random() * langResponses.length)];
+      return langResponses[Math.floor(Math.random() * langResponses.length)] + "\n\n**Reminder:** I'm not a doctor. For medical concerns, please consult a professional.";
     }
   };
   const [inputValue, setInputValue] = useState("");
 
   const quickActions = [
-    "Mood check: I'm feeling 3/10 today",
-    "Exam stress is overwhelming",
-    "Family pressure about grades",
-    "Can't sleep - racing thoughts",
-    "Feeling isolated from classmates",
-    "Need coping strategies for anxiety",
+    "How can I manage exam stress?",
+    "I'm feeling anxious about my future",
+    "Need tips for better sleep",
+    "Feeling lonely in college",
+    "How to deal with family expectations?",
+    "Quick breathing exercise please",
     "नमस्ते! मुझे चिंता हो रही है",
-    "मैं पढ़ाई का तनाव महसूस कर रहा हूं"
+    "পরীক্ষার চাপ সামলাতে পারছি না",
+    "तनाव कम कैसे करें?",
+    "కాలేజ్ లో ఒంటరిగా అనిపిస్తుంది"
   ];
 
   const handleSendMessage = () => {
@@ -132,10 +154,10 @@ const ChatInterface = () => {
         {/* Section Header */}
         <div className="text-center space-y-4 mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-              Multilingual AI Mental Health Support
+              Campus MindWell - Your AI Mental Health Companion
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Get immediate, confidential support through our AI-powered chat system designed for both mental health support and general conversation in multiple languages.
+              A friendly AI chat buddy for college students providing mental health support, emotional care, and simple guidance in your preferred language.
             </p>
           
           {/* Privacy Indicators */}
